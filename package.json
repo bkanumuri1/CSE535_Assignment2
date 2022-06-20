@@ -1,0 +1,24 @@
+{
+  "name": "cse535_assignment2",
+  "version": "1.0.0",
+  "description": "CSE 535 Mobile Computing - Assignment 2 - Group 11",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkanumuri1/CSE535_Assignment2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bkanumuri1/CSE535_Assignment2/issues"
+  },
+  "homepage": "https://github.com/bkanumuri1/CSE535_Assignment2#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "exec": "^0.2.1"
+  }
+}
