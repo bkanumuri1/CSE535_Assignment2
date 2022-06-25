@@ -1,1 +1,11 @@
+<<<<<<< HEAD
 node_modules
+=======
+
+.gradle/7.3.3/checksums/checksums.lock
+.gradle/7.3.3/checksums/md5-checksums.bin
+.gradle/7.3.3/checksums/sha1-checksums.bin
+.gradle/7.3.3/dependencies-accessors/dependencies-accessors.lock
+.gradle/7.3.3/dependencies-accessors/gc.properties
+.gradle/7.3.3/executionHistory/executionHistory.bin
+>>>>>>> a37829fc1807d059a5aa3f46976adbc481d9cf06
