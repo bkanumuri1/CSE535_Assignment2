@@ -19,6 +19,7 @@
   "homepage": "https://github.com/bkanumuri1/CSE535_Assignment2#readme",
   "dependencies": {
     "body-parser": "^1.20.0",
-    "exec": "^0.2.1"
+    "exec": "^0.2.1",
+    "express-fileupload": "^1.4.0"
   }
 }
