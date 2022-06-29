@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 
-path_to_videos = "C:\Users\Sepideh\Desktop\MS\CSE 535\posenet_nodejs_setup-master\Python Scripts\video\bluetooth"
+path_to_videos = "./video/bluetooth"
 
 
 def convert_to_csv(path_to_video):

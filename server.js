@@ -7,9 +7,9 @@ const fileupload = require("express-fileupload");
 
 const path = require("path" );
 var http = require("http")
-var PythonShell = require("python-shell");
-const spawn = require('child process'). spawn
-const process = spawn("python" ,[" ./verify.py"])
+// var PythonShell = require("python-shell");
+// const spawn = require('child process'). spawn
+// const process = spawn("python" ,[" ./verify.py"])
 app.set ('view engine' ,'ejs');
 app.use (fileupload());
 
@@ -24,20 +24,34 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res, next) => {
-  console.log("Get request.");
-  const child = execFile(
-    "python",
-    ["Frames_Extractor.py"],
-    (error, stdout, stderr) => {
-      if (error) {
-        throw error;
+
+  const child = execFile("python",["Frames_Extractor.py"], (error, stdout, stderr) => {
+      if (error || stderr) {
+        console.log("Frames error:",error);
+        console.log("Frames Std error:",stderr);
       }
+      console.log("Executing key points.")
+      const child2 = execFile("node",["main.js"],(err,stdout, stderr) =>{
+        if (err|| stderr) {
+          console.log('Key poinst err: ', err);
+          console.log('Key points stderr: ', stderr);
+          return;
+        }
+        console.log("Executing csv.")
+        const child3 =execFile("python",["convert_to_csv.py"],(err,stdout, stderr) =>{
+          if (err|| stderr) {
+            console.log('csv stderr: ', stderr);
+            console.log('csv err: ', err);
+            return;
+          }
+        })
+      })
       console.log(stdout);
     }
   );
 
   res.status(200);
-  res.render ("index")
+  // res.render ("index")
   // TODO: execute node script
 });
 
@@ -72,7 +86,7 @@ app.post ("/upload" ,async(req,res,next)=>{
       }
     })
 
-    const port = 3000;
+    const port = 3001;
 
     app.listen(port);
     console.log("Listening at port:  ", `${port}`);
