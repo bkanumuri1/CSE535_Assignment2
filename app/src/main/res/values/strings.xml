@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Knowledge Extraction from Context Sensors</string>
+    <string name="record">Record</string>
 </resources>
