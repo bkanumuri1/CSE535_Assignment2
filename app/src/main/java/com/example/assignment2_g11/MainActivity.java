@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static int CAMERA_PERMISSION_CODE =100;
@@ -22,21 +24,32 @@ public class MainActivity extends AppCompatActivity {
     private Uri videoPath;
 
 
+    public Button button;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         if (isCameraPresentInPhone()) {
             Log.i("VIDEO_RECORD_TAG","Camera is detected");
             getCameraPermission();
-
         }
         else{
             Log.i ("VIDEO_RECORD_TAG", "No Camera is detected" );
         }
+        button = (Button) findViewById(R.id.NextButton);
+        button.setOnClickListener (new View.OnClickListener() {
+            @Override
+            public void onClick(View n) {
+                Intent intent = new Intent(MainActivity.this, Activity2.class);
+                startActivity(intent);
+
+            }
+        });
+
 
     }
 
@@ -81,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (resultCode == RESULT_CANCELED){
                 Log.i("VIDEO_RECORD_TAG", "Recorded video is Cancelled");
-
-
-
             }
             else {
                 Log.i("VIDEO_RECORD_TAG", "Recorded video has some error" );
@@ -94,4 +104,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    public void UploadButtonPressed(View v){
+        Toast.makeText(MainActivity.this,"Uploading to the server", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
 }
