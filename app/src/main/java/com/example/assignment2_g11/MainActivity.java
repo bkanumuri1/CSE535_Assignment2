@@ -1,5 +1,7 @@
 package com.example.assignment2_g11;
 
+import static android.app.ProgressDialog.show;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -9,14 +11,42 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+//import com.android.volley.AuthFailureError;
+//import com.android.volley.RequestQueue;
+//import com.android.volley.Response;
+//import com.android.volley.toolbox.StringRequest;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+
+//import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okio.BufferedSink;
 
 public class MainActivity extends AppCompatActivity {
     private static int CAMERA_PERMISSION_CODE =100;
@@ -25,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public Button button;
+    MediaRecorder recorder;
+    RequestQueue requestQueue;
+
 
 
 
@@ -74,13 +107,101 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void recordVideo(){
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        //recorder.setMaxDuration(500);
+        Intent recordIntent= new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        recordIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,5);
+        recordIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        recordIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
         startActivityForResult(intent, VIDEO_RECORD_CODE);
+
+//        makePOSTRequest();
+
+        //recorder.setMaxDuration(500); // 50 seconds
+        //recorder.setMaxFileSize(5000000); // Approximately 5 megabytes
+
+
+//        MediaType formData = MediaType.get("form-data");
+//        RequestBody body = RequestBody.create("", formData);
+//        Request request = new Request.Builder()
+//                .url("http://localhost:3001/upload")
+//                .build();
+//
+//        postRequest("http://localhost:3001/upload", null);
 
     }
 
+    public void postRequest(String postUrl, RequestBody httpRequestBody){
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(postUrl)
+                .post(httpRequestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                call.cancel();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Failed to connect to server", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Video Uploaded to server", Toast.LENGTH_SHORT).show();
+//                        Intent backToSquareOne = new Intent(MainActivity.this, MainActivity.class);
+                        finish();
+//                        startActivity(backToSquareOne);
+                    }
+                });
+            }
+        });
+
+    }
+
+//    public void makePOSTRequest() {
+//
+//        Toast.makeText(MainActivity.this, "Uploading to the server", Toast.LENGTH_SHORT).show();
+//        String url = "http://localhost:3001/upload";
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+//                response -> Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show(),
+//                error -> Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_LONG).show()) {
+//
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//
+//
+//                Toast.makeText(MainActivity.this, "Successfully uploaded to server", Toast.LENGTH_SHORT).show();
+//
+//                return params;
+//            }
+//        }
+//    }
+//
+
+
+
+
+    /*
+    private void recordVideo() {
+        MediaRecorder recorder = null;
+        recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+
+
+        recorder.setMaxDuration(500); // 50 seconds
+        recorder.setMaxFileSize(5000000); // Approximately 5 megabytes
+    }
+    */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -103,9 +224,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-    }
-    public void UploadButtonPressed(View v){
-        Toast.makeText(MainActivity.this,"Uploading to the server", Toast.LENGTH_SHORT).show();
     }
 
 
