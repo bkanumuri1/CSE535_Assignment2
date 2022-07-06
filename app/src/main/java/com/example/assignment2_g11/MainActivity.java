@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +38,9 @@ import java.util.Map;
 
 
 //import okhttp3.Call;
+import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -58,10 +59,6 @@ public class MainActivity extends AppCompatActivity {
     MediaRecorder recorder;
     RequestQueue requestQueue;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,16 +70,6 @@ public class MainActivity extends AppCompatActivity {
         else{
             Log.i ("VIDEO_RECORD_TAG", "No Camera is detected" );
         }
-        button = (Button) findViewById(R.id.NextButton);
-        button.setOnClickListener (new View.OnClickListener() {
-            @Override
-            public void onClick(View n) {
-                Intent intent = new Intent(MainActivity.this, Activity2.class);
-                startActivity(intent);
-
-            }
-        });
-
 
     }
 
@@ -135,10 +122,12 @@ public class MainActivity extends AppCompatActivity {
     public void postRequest(String postUrl, RequestBody httpRequestBody){
         OkHttpClient client = new OkHttpClient();
 
+        MediaType mp4 = 
         Request request = new Request.Builder()
                 .url(postUrl)
                 .post(httpRequestBody)
                 .build();
+
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -150,17 +139,19 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Failed to connect to server", Toast.LENGTH_SHORT).show();
                     }
                 });
+                Log.e("HttpService", "onFailure() Request was:" + request);
+                e.printStackTrace();
             }
 
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                Log.e("response", "onResponse(): " + response);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(MainActivity.this, "Video Uploaded to server", Toast.LENGTH_SHORT).show();
-//                        Intent backToSquareOne = new Intent(MainActivity.this, MainActivity.class);
                         finish();
-//                        startActivity(backToSquareOne);
                     }
                 });
             }
